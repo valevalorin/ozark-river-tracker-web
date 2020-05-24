@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +23,15 @@ import { GaugeWrapperComponent } from './gauge-wrapper/gauge-wrapper.component';
     BrowserAnimationsModule,
     LeafletModule
   ],
+  entryComponents: [GaugeWrapperComponent],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+    const GaugeWrapperElement = createCustomElement(GaugeWrapperComponent, {injector});
+    // Register the custom element with the browser.
+    customElements.define('gauge-wrapper', GaugeWrapperElement);
+  }
+}

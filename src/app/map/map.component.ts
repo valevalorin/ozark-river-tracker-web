@@ -1,5 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { latLng, LatLng, tileLayer } from 'leaflet';
+import { Component, OnInit, AfterViewInit, Injector } from '@angular/core';
+import { NgElement, WithProperties, createCustomElement } from '@angular/elements';
+import { latLng, LatLng, tileLayer, marker } from 'leaflet';
+import { GaugeWrapperComponent } from '../gauge-wrapper/gauge-wrapper.component';
 declare const L: any;
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczBvbDVpZjVkMCJ9.kFuIDpDHu_dX6zCfIsqP4A';
 
@@ -10,10 +12,11 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczB
 })
 export class MapComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(private injector: Injector) { }
 
   private map: any;
   public leafletOptions: any = {};
+  public leafletLayers: any[] = [];
   
 
   ngOnInit() {
@@ -21,7 +24,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.leafletOptions = {
       layers: [
         tileLayer(
-          'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+          // 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           {
             tileSize: 512,
             maxZoom: 18,
@@ -34,6 +38,37 @@ export class MapComponent implements OnInit, AfterViewInit {
       zoom: 13,
       center: latLng(36.956008, -90.994107)
     };
+
+    // this.leafletLayers.push(
+    //   marker([ 36.956008, -90.994107 ])
+    // );
+
+    let m = marker([ 36.956008, -90.994107 ]);
+    this.leafletLayers.push(m);
+
+    // m.bindPopup( layer => {
+    //   // let scope = this;
+    //   let injector = this.injector;
+    //   const popupEl = createCustomElement(GaugeWrapperComponent, {injector});
+    //   // const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('app-gauge-wrapper') as any;
+    //   // popupEl.name = 'Hello';
+    //   return popupEl;
+    // }, {});
+
+    m.bindPopup( layer => {
+      const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
+      // Listen to the close event
+      popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
+      popupEl.name = 'Hello';
+      // Add to the DOM
+      document.body.appendChild(popupEl);
+      return popupEl;
+      // layer.bindPopup( fl => {
+        
+      // });
+    }, {});
+
+    
   }
 
   ngAfterViewInit() {
