@@ -1,11 +1,102 @@
+$dark-grey:#424242;
+
 .content {
   display:inline-block;
   height:100vh;
   width:100vw;
   overflow:hidden;
+  position:relative;
+
+  .overlay {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    z-index:100;
+    pointer-events:none;
+
+    .overlay-flex {
+      display:flex;
+      height:100%;
+      width:100%;
+      overflow:hidden;
+      flex-direction: column;
+
+      .header {
+        display:inline-block;
+        flex: 0 0 auto;
+        min-height:0px;
+        width:100%;
+
+        .search-row {
+          display:inline-block;
+          width:100%;
+          padding:2rem;
+          text-align:center;
+
+          .search-bar {
+            display:inline-block;
+            border-radius:100px;
+            padding-left:2rem;
+            padding-right:2rem;
+            padding-top:0.4rem;
+            padding-bottom:0.4rem;
+            background-color:$dark-grey;
+            color:#efefef;
+            min-width:20rem;
+            pointer-events: all;
+
+            .search-bar-field {
+              width:100%;
+              font-size:0.1rem;
+
+              ::ng-deep .mat-form-field-underline {
+                display: none;
+              }
+
+              ::ng-deep input {
+                font-size:0.8rem !important;
+              }
+            }
+
+            .inner-search-bar {
+              display:flex;
+              align-items:center;
+
+              .search-icon {
+                margin-right:0.75rem;
+                margin-left:-1rem;
+                font-size:1.2rem;
+                line-height:1.2;
+              }
+
+              input {
+                background-color:transparent;
+                color:#efefef;
+                margin:0px;
+                padding:0px;
+                border: 0px solid black;
+                box-shadow: none;
+                outline:none;
+                font-size:1rem;
+              }
+            }
+          }
+        }
+      }
+
+      .body {
+        display:inline-block;
+        flex: 1 1 auto;
+        min-height:0px;
+      }
+    }
+  }
 
   #mapid {
     height:100vh;
     width:100vw;
+    z-index:50;
   }
 }

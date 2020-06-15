@@ -1,7 +1,11 @@
 import { Component, OnInit, AfterViewInit, Injector } from '@angular/core';
 import { NgElement, WithProperties, createCustomElement } from '@angular/elements';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { latLng, LatLng, tileLayer, marker } from 'leaflet';
 import { GaugeWrapperComponent } from '../gauge-wrapper/gauge-wrapper.component';
+import { RiverService } from '../services/river.service';
+import { River } from '../classes/river.class';
+import { Util } from '../classes/util';
 declare const L: any;
 const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczBvbDVpZjVkMCJ9.kFuIDpDHu_dX6zCfIsqP4A';
 
@@ -10,17 +14,135 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczB
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
 
-  constructor(private injector: Injector) { }
+  constructor(
+    private injector: Injector,
+    private formBuilder: FormBuilder,
+    private riverService: RiverService
+  ) { }
 
   private map: any;
   public leafletOptions: any = {};
   public leafletLayers: any[] = [];
-  
+  public leafletZoom: number = 13;
+  public leafletCenter = latLng( 36.956008, -90.994107);
 
+  public rivers: River[] = [];
+  public filteredRivers: River[];
+  public autocompleteOpen: boolean = false;
+  private activeRiver: River = null;
+
+  public form: FormGroup;
+  
   ngOnInit() {
-    console.log('beacon');
+    // initialize form
+    this.form = this.formBuilder.group({
+      searchInput: ['', null],
+      selectedRiver: [null, null]
+    });
+
+    this.form.get('searchInput').valueChanges.subscribe((name: any) => {
+      if(Util.nnue(name)) {
+        if(name instanceof River) {
+          name = name.name;
+        }
+        
+        this.filteredRivers = this.rivers.filter((river: River) => {
+          let riverName = this.stripPunctuation(river.name.toLowerCase());
+          let input = this.stripPunctuation(name.toLowerCase());
+          if(riverName.includes(input)) {
+            return true;
+          }
+          return false;
+        });
+      } else {
+        this.filteredRivers = this.rivers;
+      }
+    });
+
+    // this.initializeMap();
+
+    this.riverService.getRivers().then((rivers) => {
+      this.rivers = rivers;
+
+      let firstRiver = rivers[0];
+      this.form.get('searchInput').setValue(firstRiver.name);
+      this.activeRiverChanged(firstRiver);
+      this.filteredRivers = rivers;
+    });
+
+    this.initializeMap();
+
+    // this.leafletLayers = [
+    //   tileLayer(
+    //     // 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+    //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    //     {
+    //       tileSize: 512,
+    //       maxZoom: 18,
+    //       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //       // accessToken: MAPBOX_TOKEN,
+    //       zoomOffset: -1
+    //     }
+    //   )
+    // ];
+
+    // this.leafletOptions = {
+    //   layers: this.leafletLayers,
+    //   zoom: 13,
+    //   center: latLng( 36.956008, -90.994107)
+    // };
+
+    
+
+    // this.leafletLayers.push(
+    //   marker([ 36.956008, -90.994107 ])
+    // );
+
+    // let m = marker([ 36.956008, -90.994107 ]);
+    // this.leafletLayers.push(m);
+
+    // // m.bindPopup( layer => {
+    // //   // let scope = this;
+    // //   let injector = this.injector;
+    // //   const popupEl = createCustomElement(GaugeWrapperComponent, {injector});
+    // //   // const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('app-gauge-wrapper') as any;
+    // //   // popupEl.name = 'Hello';
+    // //   return popupEl;
+    // // }, {});
+
+    // m.bindPopup( layer => {
+    //   const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
+    //   // Listen to the close event
+    //   popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
+    //   popupEl.name = 'Hello';
+    //   // Add to the DOM
+    //   document.body.appendChild(popupEl);
+    //   return popupEl;
+    //   // layer.bindPopup( fl => {
+        
+    //   // });
+    // }, {});
+
+    
+  }
+
+  public autocompleteRiverSelected(river: River) {
+    if(river instanceof River && (Util.inu(this.activeRiver) || this.activeRiver.id !== river.id)) {
+      this.activeRiverChanged(river);
+    }
+  }
+
+  public stripPunctuation(input: string) {
+    return input.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()'"]/g,"");
+  }
+
+  public openAutocomplete() {
+    this.autocompleteOpen = true;
+  }
+
+  private initializeMap(): void {
     this.leafletOptions = {
       layers: [
         tileLayer(
@@ -34,64 +156,36 @@ export class MapComponent implements OnInit, AfterViewInit {
             zoomOffset: -1
           }
         )
-      ],
-      zoom: 13,
-      center: latLng(36.956008, -90.994107)
+      ]
     };
-
-    // this.leafletLayers.push(
-    //   marker([ 36.956008, -90.994107 ])
-    // );
-
-    let m = marker([ 36.956008, -90.994107 ]);
-    this.leafletLayers.push(m);
-
-    // m.bindPopup( layer => {
-    //   // let scope = this;
-    //   let injector = this.injector;
-    //   const popupEl = createCustomElement(GaugeWrapperComponent, {injector});
-    //   // const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('app-gauge-wrapper') as any;
-    //   // popupEl.name = 'Hello';
-    //   return popupEl;
-    // }, {});
-
-    m.bindPopup( layer => {
-      const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
-      // Listen to the close event
-      popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
-      popupEl.name = 'Hello';
-      // Add to the DOM
-      document.body.appendChild(popupEl);
-      return popupEl;
-      // layer.bindPopup( fl => {
-        
-      // });
-    }, {});
-
-    
   }
 
-  ngAfterViewInit() {
-    // this.map = L.map('mapid', {
-    //   // center: [51.505, -0.09],
-    //   center: [36.956008, -90.994107],
-    //   zoom: 13
-    // });
+  private activeRiverChanged(river: River): void {
+    this.activeRiver = river;
+    this.renderActiveRiver();
+  }
 
-    // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //   maxZoom: 18,
-    //   id: 'mapbox/streets-v11',
-    //   tileSize: 512,
-    //   zoomOffset: -1,
-    //   accessToken: MAPBOX_TOKEN
-    // }).addTo(this.map);
+  private renderActiveRiver(): void {
+    this.leafletCenter = latLng(this.activeRiver.centerLat, this.activeRiver.centerLong);
+    this.leafletZoom = this.activeRiver.zoom;
 
-    // var popup = L.popup()
-    // .setLatLng([36.956008, -90.994107])
-    // // .setContent('<p>Hello world!<br />This is a nice popup.</p>')
-    // .setContent('<app-gauge-wrapper></app-gauge-wrapper>')
-    // .openOn(this.map);
+    this.leafletLayers = [];
+
+    this.activeRiver.gauges.forEach((gauge) => {
+      let m = marker([ gauge.lat, gauge.long ]);
+      this.leafletLayers.push(m);
+
+      m.bindPopup( layer => {
+        const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
+        // Listen to the close event
+        popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
+        popupEl.gauge = gauge;
+        // Add to the DOM
+        document.body.appendChild(popupEl);
+        return popupEl;
+      }, {});
+    });
+
   }
 
 }

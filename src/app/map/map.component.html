@@ -1,8 +1,34 @@
 <div class="content">
+  <div class="overlay" [formGroup]="form">
+    <div class="overlay-flex">
+        <div class="header">
+          <div class="search-row">
+            <div class="search-bar">
+              <div class="inner-search-bar" (click)="openAutocomplete()">
+                <mat-icon class="search-icon" aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+                <!-- <input type="text" placeholder="Starting typing to find your river"/> -->
+                <mat-form-field class="search-bar-field">
+                  <input type="text" matInput formControlName="searchInput" [matAutocomplete]="riversearch">
+                </mat-form-field>
+
+                <mat-autocomplete #riversearch="matAutocomplete" (optionSelected)="autocompleteRiverSelected($event.option.value)" [isOpen]="autocompleteOpen">
+                  <mat-option *ngFor="let river of filteredRivers" [value]="river">{{river.name}}</mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="body">
+    
+        </div>
+    </div>
+  </div>
   <div id="mapid"
     leaflet
     [leafletOptions]="leafletOptions"
     [leafletLayers]="leafletLayers"
+    [(leafletZoom)]="leafletZoom"
+    [(leafletCenter)]="leafletCenter"
   >
 
   </div>

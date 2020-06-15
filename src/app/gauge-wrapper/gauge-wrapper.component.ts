@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class GaugeWrapperComponent implements OnInit {
 
   public name: string = 'World';
+  public gauge: any = {};
 
   constructor() { }
 

@@ -5,11 +5,17 @@ import { createCustomElement } from '@angular/elements';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 // Custom Components
 import { MapComponent } from './map/map.component';
 import { GaugeWrapperComponent } from './gauge-wrapper/gauge-wrapper.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RiverService } from './services/river.service';
 
 @NgModule({
   declarations: [
@@ -21,10 +27,16 @@ import { GaugeWrapperComponent } from './gauge-wrapper/gauge-wrapper.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    LeafletModule
+    MatIconModule,
+    LeafletModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule
   ],
   entryComponents: [GaugeWrapperComponent],
-  providers: [],
+  providers: [
+    RiverService
+  ],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
