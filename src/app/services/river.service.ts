@@ -19,8 +19,22 @@ export class RiverService {
           13,
           [
             {
+              name: "Aker's Ferry",
               lat: 36.956008,
-              long: -90.994107
+              long: -90.994107,
+              metrics: {
+                waterLevel: 6.7,
+                dischargeRate: 12.3
+              }
+            },
+            {
+              name: "Other Longer Name Man",
+              lat: 36.976057, 
+              long: -90.983201,
+              metrics: {
+                waterLevel: 6.7,
+                dischargeRate: 12.3
+              }
             }
           ]
         ),

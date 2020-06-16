@@ -3,7 +3,7 @@
     <div class="overlay-flex">
         <div class="header">
           <div class="search-row">
-            <div class="search-bar">
+            <div class="search-bar mat-elevation-z2">
               <div class="inner-search-bar" (click)="openAutocomplete()">
                 <mat-icon class="search-icon" aria-hidden="false" aria-label="Example home icon">search</mat-icon>
                 <!-- <input type="text" placeholder="Starting typing to find your river"/> -->
@@ -19,7 +19,37 @@
           </div>
         </div>
         <div class="body">
-    
+          <div class="table-container mat-elevation-z2">
+            <table cellspacing="0">
+              <thead>
+                <tr>
+                  <th>
+                    Gauge
+                  </th>
+                  <th>
+                    Water Level
+                  </th>
+                  <th>
+                    Discharge Rate
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
+                  <td>
+                    {{gauge.name}}
+                  </td>
+                  <td>
+                    {{gauge.metrics.waterLevel}}&nbsp;ft
+                  </td>
+                  <td>
+                    {{gauge.metrics.dischargeRate}}&nbsp;gl/m
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
         </div>
     </div>
   </div>

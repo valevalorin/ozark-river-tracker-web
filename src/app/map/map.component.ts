@@ -142,6 +142,10 @@ export class MapComponent implements OnInit {
     this.autocompleteOpen = true;
   }
 
+  public centerOnGauge(gauge: any) {
+    this.leafletCenter = latLng(gauge.lat, gauge.long);
+  }
+
   private initializeMap(): void {
     this.leafletOptions = {
       layers: [
