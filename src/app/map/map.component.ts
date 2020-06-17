@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Injector } from '@angular/core';
 import { NgElement, WithProperties, createCustomElement } from '@angular/elements';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { latLng, LatLng, tileLayer, marker } from 'leaflet';
+import { latLng, LatLng, tileLayer, marker, icon } from 'leaflet';
 import { GaugeWrapperComponent } from '../gauge-wrapper/gauge-wrapper.component';
 import { RiverService } from '../services/river.service';
 import { River } from '../classes/river.class';
@@ -27,6 +27,11 @@ export class MapComponent implements OnInit {
   public leafletLayers: any[] = [];
   public leafletZoom: number = 13;
   public leafletCenter = latLng( 36.956008, -90.994107);
+  private leafletMarker = icon({
+    iconUrl: 'assets/img/gauge_light.png',
+    iconSize: [41, 59],
+    iconAnchor: [20, 59]
+  })
 
   public rivers: River[] = [];
   public filteredRivers: River[];
@@ -41,6 +46,20 @@ export class MapComponent implements OnInit {
       searchInput: ['', null],
       selectedRiver: [null, null]
     });
+
+    // setTimeout(() => {
+    //   this.chartData.datasets[0] = {
+    //     label: 'Hello',
+    //     data: [1, 2, 3, 4, 5, 6],
+    //     backgroundColor: [
+    //       "rgba(44, 44, 230, 0.4)"
+    //     ],
+    //     borderColor: [
+    //       "rgba(44, 44, 230, 1.0)"
+    //     ]
+    //   };
+      
+    // }, 3000);
 
     this.form.get('searchInput').valueChanges.subscribe((name: any) => {
       if(Util.nnue(name)) {
@@ -144,6 +163,7 @@ export class MapComponent implements OnInit {
 
   public centerOnGauge(gauge: any) {
     this.leafletCenter = latLng(gauge.lat, gauge.long);
+    this.leafletZoom = this.activeRiver.zoom;
   }
 
   private initializeMap(): void {
@@ -176,7 +196,7 @@ export class MapComponent implements OnInit {
     this.leafletLayers = [];
 
     this.activeRiver.gauges.forEach((gauge) => {
-      let m = marker([ gauge.lat, gauge.long ]);
+      let m = marker([ gauge.lat, gauge.long ], {icon: this.leafletMarker});
       this.leafletLayers.push(m);
 
       m.bindPopup( layer => {

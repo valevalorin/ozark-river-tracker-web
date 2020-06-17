@@ -6,10 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input'
+
+// Other 3rd Party
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ChartsModule } from 'ng2-charts';
 
 // Custom Components
 import { MapComponent } from './map/map.component';
@@ -27,6 +31,7 @@ import { RiverService } from './services/river.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ChartsModule,
     MatIconModule,
     LeafletModule,
     MatAutocompleteModule,

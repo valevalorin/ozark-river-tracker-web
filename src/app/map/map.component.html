@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="body">
-          <div class="table-container mat-elevation-z2">
+          <div class="table-container mat-elevation-z3">
             <table cellspacing="0">
               <thead>
                 <tr>
@@ -34,16 +34,17 @@
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody *ngIf="activeRiver">
                 <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
                   <td>
                     {{gauge.name}}
                   </td>
                   <td>
-                    {{gauge.metrics.waterLevel}}&nbsp;ft
+                    <span>{{gauge.metrics.waterLevel}}</span>
+                    &nbsp;ft
                   </td>
                   <td>
-                    {{gauge.metrics.dischargeRate}}&nbsp;gl/m
+                    <span>{{gauge.metrics.dischargeRate}}</span>&nbsp;gl/m
                   </td>
                 </tr>
               </tbody>

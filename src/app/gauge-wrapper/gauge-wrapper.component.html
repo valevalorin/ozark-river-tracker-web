@@ -1,3 +1,32 @@
-<p>
-  gauge-wrapper works!
-</p>
+<div class="container">
+  <div class="flex-container">
+    <div class="body">
+      <!-- <div class="chart-container" style="background-color:green;" >
+
+      </div>
+      <div class="chart-container" style="background-color:green;">
+        
+      </div> -->
+      <canvas
+        *ngIf="datasets != null"
+        class="chart-canvas"
+        baseChart
+        [datasets]="datasets[selectedMetric]"
+        [labels]="chartLabels"
+        [options]="chartOptions[selectedMetric]"
+        chartType="line"
+        >
+        </canvas>
+    </div>
+    <div class="footer">
+      <div class="tab-btn-row">
+          <div class="tab-btn" [ngClass]="{'selected': selectedMetric == 'waterLevel'}" (click)="selectMetric('waterLevel')">
+            Water Level
+          </div>
+          <div class="tab-btn" [ngClass]="{'selected': selectedMetric == 'dischargeRate'}" (click)="selectMetric('dischargeRate')">
+            Discharge Rate
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

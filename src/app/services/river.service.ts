@@ -55,4 +55,14 @@ export class RiverService {
     });
     
   }
+
+  public getGaugeHistory(gaugeId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      resolve({
+        'waterLevel': [1,2,3,4,5,6,7],
+        'dischargeRate': [7,6,5,4,3,2,1]
+      });
+    });
+    
+  }
 }
