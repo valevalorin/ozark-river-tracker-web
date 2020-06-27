@@ -14,7 +14,12 @@ export class RiverService {
     return new Promise(async (resolve, reject) => {
 
       try {
-        let response = await this.http.get(environment.API_HOST + '/rivers');
+        let response = await this.http.get(environment.API_HOST + '/api/rivers');
+        // console.log(response);
+        response.subscribe((data) => {
+          console.log(data);
+        })
+        resolve([]);
       } catch (ex) {
         console.log(ex);
         reject();

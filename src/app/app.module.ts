@@ -20,6 +20,7 @@ import { MapComponent } from './map/map.component';
 import { GaugeWrapperComponent } from './gauge-wrapper/gauge-wrapper.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RiverService } from './services/river.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { RiverService } from './services/river.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     ChartsModule,
     MatIconModule,
     LeafletModule,
