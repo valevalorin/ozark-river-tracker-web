@@ -39,8 +39,6 @@ $text-white:#efefef;
         background-color:$dark-grey;
         background-image: url("../../assets/img/backdot.png");
         background-repeat: repeat;
-        // background-image: url("../../assets/img/metal.jpg");
-        // background-size:cover;
         
 
         table {
@@ -64,7 +62,6 @@ $text-white:#efefef;
           }
 
           th:not(:last-child) {
-            // border-right:1px solid $text-white;
             border-right:1px solid transparent;
           }
 
@@ -107,11 +104,6 @@ $text-white:#efefef;
 
             tr:hover {
               background-color:#333;
-
-              td:not(:last-child) {
-                // border-right:1px solid #333;  
-                // border-left:0px solid black;
-              }
             }
           }
 
@@ -234,15 +226,10 @@ $text-white:#efefef;
           bottom:1rem;
           left:1rem;
           display:inline-block;
-          // display:flex;
-          // flex-direction:column;
           pointer-events:all;
           height:100%;
-          // padding:1rem;
           background-color:$dark-grey-transparent;
           color:$text-white;
-          // border-radius:12px;
-          // border-radius:8px;
           max-width:33%;
           width:23%;
           height:35%;
@@ -272,7 +259,6 @@ $text-white:#efefef;
             }
 
             th:not(:last-child) {
-              // border-right:1px solid $text-white;
               border-right:1px solid transparent;
             }
 
@@ -308,19 +294,8 @@ $text-white:#efefef;
                 }
               }
 
-              tr:not(:last-child) {
-                td {
-                  // border-bottom:1px solid #ccc;
-                }
-              }
-
               tr:hover {
                 background-color:#333;
-
-                td:not(:last-child) {
-                  // border-right:1px solid #333;  
-                  // border-left:0px solid black;
-                }
               }
             }
 

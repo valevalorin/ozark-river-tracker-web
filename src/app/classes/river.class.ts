@@ -1,8 +1,10 @@
+import { Gauge } from './gauge.class';
+
 export class River {
 
   public id: string;
   public name: string;
-  public gauges: any[];
+  public gauges: Gauge[];
   public centerLat: number;
   public centerLong: number;
   public zoom: number;

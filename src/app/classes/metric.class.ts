@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class Metric {
 
   public value: number;
@@ -8,6 +10,8 @@ export class Metric {
     date: string
   ) {
     this.value = value;
-    this.date = date;
+    
+    let m = moment(date);
+    this.date = m.format('M/D/YYYY H:mm');
   }
 }

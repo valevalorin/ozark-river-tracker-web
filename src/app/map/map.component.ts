@@ -36,7 +36,7 @@ export class MapComponent implements OnInit {
   public rivers: River[] = [];
   public filteredRivers: River[];
   public autocompleteOpen: boolean = false;
-  private activeRiver: River = null;
+  public activeRiver: River = null;
 
   public form: FormGroup;
   
@@ -46,20 +46,6 @@ export class MapComponent implements OnInit {
       searchInput: ['', null],
       selectedRiver: [null, null]
     });
-
-    // setTimeout(() => {
-    //   this.chartData.datasets[0] = {
-    //     label: 'Hello',
-    //     data: [1, 2, 3, 4, 5, 6],
-    //     backgroundColor: [
-    //       "rgba(44, 44, 230, 0.4)"
-    //     ],
-    //     borderColor: [
-    //       "rgba(44, 44, 230, 1.0)"
-    //     ]
-    //   };
-      
-    // }, 3000);
 
     this.form.get('searchInput').valueChanges.subscribe((name: any) => {
       if(Util.nnue(name)) {
@@ -80,8 +66,6 @@ export class MapComponent implements OnInit {
       }
     });
 
-    // this.initializeMap();
-
     this.riverService.getRivers().then((rivers) => {
       this.rivers = rivers;
 
@@ -92,59 +76,6 @@ export class MapComponent implements OnInit {
     });
 
     this.initializeMap();
-
-    // this.leafletLayers = [
-    //   tileLayer(
-    //     // 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
-    //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //     {
-    //       tileSize: 512,
-    //       maxZoom: 18,
-    //       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //       // accessToken: MAPBOX_TOKEN,
-    //       zoomOffset: -1
-    //     }
-    //   )
-    // ];
-
-    // this.leafletOptions = {
-    //   layers: this.leafletLayers,
-    //   zoom: 13,
-    //   center: latLng( 36.956008, -90.994107)
-    // };
-
-    
-
-    // this.leafletLayers.push(
-    //   marker([ 36.956008, -90.994107 ])
-    // );
-
-    // let m = marker([ 36.956008, -90.994107 ]);
-    // this.leafletLayers.push(m);
-
-    // // m.bindPopup( layer => {
-    // //   // let scope = this;
-    // //   let injector = this.injector;
-    // //   const popupEl = createCustomElement(GaugeWrapperComponent, {injector});
-    // //   // const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('app-gauge-wrapper') as any;
-    // //   // popupEl.name = 'Hello';
-    // //   return popupEl;
-    // // }, {});
-
-    // m.bindPopup( layer => {
-    //   const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
-    //   // Listen to the close event
-    //   popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
-    //   popupEl.name = 'Hello';
-    //   // Add to the DOM
-    //   document.body.appendChild(popupEl);
-    //   return popupEl;
-    //   // layer.bindPopup( fl => {
-        
-    //   // });
-    // }, {});
-
-    
   }
 
   public autocompleteRiverSelected(river: River) {
