@@ -63,38 +63,58 @@
             </div>
           </div>
           <div class="body">
-            <!-- <div class="table-container mat-elevation-z3">
-              <table cellspacing="0">
-                <thead>
-                  <tr>
-                    <th>
-                      Gauge
-                    </th>
-                    <th>
-                      Water Level
-                    </th>
-                    <th>
-                      Discharge Rate
-                    </th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="activeRiver">
-                  <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
-                    <td>
-                      {{gauge.name}}
-                    </td>
-                    <td>
-                      <span>{{gauge.metrics.waterLevel}}</span>
-                      &nbsp;ft
-                    </td>
-                    <td>
-                      <span>{{gauge.metrics.dischargeRate}}</span>&nbsp;gl/m
-                    </td>
-                  </tr>
-                </tbody>
+            <div class="gauge-list">
+              <div class="gauge-chip mat-elevation-z3" *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
+                <div class="chip-header">
+                  {{gauge.name}}
+                </div>
+                <div class="chip-body">
+                  <div class="chip-metric">
+                    <div class="value-row">
+                      <!-- <mat-icon matIcon>height</mat-icon> -->
+                      <i class="material-icons">height</i>
+                      <div class="metric-value">
+                        {{gauge.mostRecent.waterLevel.value}}&nbsp;
+                      </div>
+                      <div class="metric-unit">
+                        ft
+                      </div>
+                    </div>
 
-              </table>
-            </div> -->
+                    <div class="metric-label">
+                      Water Level
+                    </div>
+                  </div>
+
+                  <div class="chip-metric">
+                    <div class="value-row" *ngIf="gauge.mostRecent.dischargeRate">
+                      <i class="material-icons opacity">opacity</i>
+                      <div class="metric-value">
+                        {{gauge.mostRecent.dischargeRate.value}}&nbsp;
+                      </div>
+                      <div class="metric-unit">
+                        ft<sup>3</sup>/s
+                      </div>
+                    </div>
+
+                    <div class="value-row centered" *ngIf="!gauge.mostRecent.dischargeRate">
+                      <!-- <i class="material-icons opacity">opacity</i> -->
+                      <div class="metric-value">
+                        N/A&nbsp;
+                      </div>
+                      <!-- <div class="metric-unit">
+                        ft<sup>3</sup>/s
+                      </div> -->
+                    </div>
+
+                    <div class="metric-label">
+                      Discharge Rate
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
       </div>
     </div>

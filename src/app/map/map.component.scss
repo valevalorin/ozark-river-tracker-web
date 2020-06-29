@@ -14,7 +14,7 @@ $text-white:#efefef;
   .sidebar {
     display:inline-block;
     height:100vh;
-    width:22%;
+    width:0%;
     float:left;
     color:$text-white;
 
@@ -125,7 +125,7 @@ $text-white:#efefef;
   .map {
     display:inline-block;
     height:100vh;
-    width:78%;
+    width:100%;
     float:right;
     position:relative;
     z-index:75;
@@ -216,6 +216,93 @@ $text-white:#efefef;
         min-height:0px;
         padding:1rem;
         position:relative;
+
+        .gauge-list {
+          display:inline-block;
+          height:100%;
+          overflow-y:auto;
+        }
+
+        .gauge-chip:hover {
+          background-color:$dark-grey;
+        }
+
+        .gauge-chip {
+          display:flex;
+          flex-direction:column;
+          width:300px;
+          color:$text-white;
+          // background-color:$dark-grey;
+          background-color:rgba(0, 0, 0, 0.7);
+          border-radius:12px;
+          padding:0.75rem;
+          pointer-events: all;
+          font-size:0.9rem;
+          transition:background-color 0.25s ease-out;
+          cursor:pointer;
+          margin-bottom:0.5rem;
+
+          .chip-header {
+            flex: 0 0 auto;
+            font-weight:300;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width:100%;
+          }
+
+          .chip-body {
+            flex: 1 1 auto;
+            display: flex;
+
+            .chip-metric {
+              flex: 1 1 50%;
+
+              .value-row.centered {
+                justify-content: center;
+                
+                .metric-value {
+                  font-weight:300;
+                }
+              }
+
+              .value-row {
+                display:flex;
+                align-items: flex-end;
+                padding-top:0.75rem;
+                padding-bottom:0.75rem;
+                line-height:2.0rem;
+
+                div {
+                  display:inline-block;
+                }
+
+                i {
+                  font-size: 2.2rem;
+                  line-height:2.2rem;
+                }
+
+                i.opacity {
+                  padding-right:0.5rem;
+                }
+
+                .metric-value {
+                  font-size:2rem;
+                }
+
+                .metric-unit {
+                  font-weight:300;
+                }
+              }
+
+              .metric-label {
+                font-weight:300;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                text-align:center;
+              }
+            }
+          }
+        }
 
         .table-container:hover {
           background-color:$dark-grey;
