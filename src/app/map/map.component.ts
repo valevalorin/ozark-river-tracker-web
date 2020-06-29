@@ -28,7 +28,7 @@ export class MapComponent implements OnInit {
   public leafletZoom: number = 13;
   public leafletCenter = latLng( 36.956008, -90.994107);
   private leafletMarker = icon({
-    iconUrl: 'assets/img/gauge_light.png',
+    iconUrl: 'assets/img/gauge_light_margin.png',
     iconSize: [41, 59],
     iconAnchor: [20, 59]
   })
@@ -185,8 +185,11 @@ export class MapComponent implements OnInit {
   }
 
   private activeRiverChanged(river: River): void {
-    this.activeRiver = river;
-    this.renderActiveRiver();
+    this.riverService.getGauges(river.id).then((gauges) => {
+      this.activeRiver = river;
+      river.gauges = gauges;
+      this.renderActiveRiver();
+    });
   }
 
   private renderActiveRiver(): void {

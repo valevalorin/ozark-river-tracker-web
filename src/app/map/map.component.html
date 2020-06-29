@@ -19,17 +19,21 @@
                 </th>
               </tr>
             </thead>
-            <tbody *ngIf="activeRiver">
+            <tbody *ngIf="activeRiver && activeRiver.gauges && activeRiver.gauges.length > 0">
               <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
                 <td>
                   {{gauge.name}}
                 </td>
                 <td>
-                  <span>{{gauge.metrics.waterLevel}}</span>
+                  <span class="emphasis">{{gauge.mostRecent.waterLevel.value}}</span>
                   &nbsp;ft
                 </td>
                 <td>
-                  <span>{{gauge.metrics.dischargeRate}}</span>&nbsp;gl/m
+                  <span *ngIf="gauge.mostRecent.dischargeRate">
+                    <span class="emphasis">
+                      {{gauge.mostRecent.dischargeRate.value}}
+                    </span>&nbsp;ft<sup>3</sup>/s
+                  </span>
                 </td>
               </tr>
             </tbody>

@@ -81,7 +81,7 @@ $text-white:#efefef;
               td {
                 padding:0.6rem;
 
-                span {
+                .emphasis {
                   font-weight:700;
                 }
               }
@@ -288,8 +288,9 @@ $text-white:#efefef;
 
                 td {
                   padding:0.6rem;
+                  font-weight:500;
 
-                  span {
+                  .emphasis {
                     font-weight:700;
                   }
                 }

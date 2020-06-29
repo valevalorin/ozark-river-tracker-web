@@ -1,6 +1,6 @@
 export class River {
 
-  public id: number;
+  public id: string;
   public name: string;
   public gauges: any[];
   public centerLat: number;
@@ -8,7 +8,7 @@ export class River {
   public zoom: number;
 
   constructor(
-    id: number,
+    id: string,
     name: string,
     centerLat = 36.956008,
     centerLong = -90.994107,
