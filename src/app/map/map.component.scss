@@ -11,117 +11,6 @@ $text-white:#efefef;
   overflow:hidden;
   position:relative;
 
-  .sidebar {
-    display:inline-block;
-    height:100vh;
-    width:0%;
-    float:left;
-    color:$text-white;
-
-    .sidebar-flex {
-      display:flex;
-      flex-direction:column;
-      height:100%;
-      width:100%;
-
-      .sidebar-header {
-        flex: 0 0 auto;
-        padding:1rem;
-        font-size:1.4rem;
-        font-weight:700;
-        text-shadow: 0px 0px rgba(0, 0, 0, 0.7);
-        background-color:darken($dark-grey, 10%);
-        z-index:75;
-      }
-
-      .sidebar-body {
-        flex: 1 1 auto;
-        background-color:$dark-grey;
-        background-image: url("../../assets/img/backdot.png");
-        background-repeat: repeat;
-        
-
-        table {
-          width:100%;
-          border:0px solid transparent;
-          margin:0px;
-
-          th {
-            font-weight:500;
-            padding-right:0.75rem;
-            padding-left:0.75rem;
-            padding-top:0.5rem;
-            padding-bottom:0.5rem;
-
-            background-color:$table-header;
-            width:33%;
-          }
-
-          th:first-child {
-            text-align:left;
-          }
-
-          th:not(:last-child) {
-            border-right:1px solid transparent;
-          }
-
-          tbody {
-            padding-left:0.75rem;
-            padding-right:0.75rem;
-
-            tr {
-              cursor:pointer;
-              transition:background-color 0.25s ease-out;
-
-              $table-radius:4px;
-
-              td {
-                padding:0.6rem;
-
-                .emphasis {
-                  font-weight:700;
-                }
-              }
-
-              td:first-child {
-                border-top-left-radius: $table-radius;
-                border-bottom-left-radius: $table-radius;
-                font-size:0.9rem;
-                text-align:left;
-              }
-
-              td:last-child {
-                border-top-right-radius: $table-radius;
-                border-bottom-right-radius: $table-radius;
-              }
-            }
-
-            tr:not(:last-child) {
-              td {
-                border-bottom:1px solid #666;
-              }
-            }
-
-            tr:hover {
-              background-color:#333;
-            }
-          }
-
-          td {
-            text-align:center;
-            font-size:0.8rem;
-            padding-right:0.75rem;
-            padding-left:0.75rem;
-            padding-top:0.25rem;
-            padding-bottom:0.25rem;
-          }
-        }
-      }
-    }
-  }
-
-
-
   .map {
     display:inline-block;
     height:100vh;
@@ -235,14 +124,11 @@ $text-white:#efefef;
         }
 
         .gauge-chip {
-          // position:absolute;
-          // right:100%;
           transform: translateX(-110%);
           display:flex;
           flex-direction:column;
           width:300px;
           color:$text-white;
-          // background-color:$dark-grey;
           background-color:rgba(0, 0, 0, 0.7);
           border-radius:12px;
           padding:0.75rem;
@@ -310,99 +196,6 @@ $text-white:#efefef;
                 text-overflow: ellipsis;
                 text-align:center;
               }
-            }
-          }
-        }
-
-        .table-container:hover {
-          background-color:$dark-grey;
-        }
-
-        .table-container {
-          position:absolute;
-          bottom:1rem;
-          left:1rem;
-          display:inline-block;
-          pointer-events:all;
-          height:100%;
-          background-color:$dark-grey-transparent;
-          color:$text-white;
-          max-width:33%;
-          width:23%;
-          height:35%;
-          overflow-y:auto;
-          margin-top:auto;
-
-          transition:background-color 0.25s ease-out, width 0.25s ease-out;
-
-          table {
-            width:100%;
-            border:0px solid transparent;
-            margin:0px;
-
-            th {
-              font-weight:500;
-              padding-right:0.75rem;
-              padding-left:0.75rem;
-              padding-top:0.5rem;
-              padding-bottom:0.5rem;
-
-              background-color:$table-header;
-              width:33%;
-            }
-
-            th:first-child {
-              text-align:left;
-            }
-
-            th:not(:last-child) {
-              border-right:1px solid transparent;
-            }
-
-            tbody {
-              padding-left:0.75rem;
-              padding-right:0.75rem;
-
-              tr {
-                cursor:pointer;
-                transition:background-color 0.25s ease-out;
-
-                $table-radius:4px;
-
-                td {
-                  padding:0.6rem;
-                  font-weight:500;
-
-                  .emphasis {
-                    font-weight:700;
-                  }
-                }
-
-                td:first-child {
-                  border-top-left-radius: $table-radius;
-                  border-bottom-left-radius: $table-radius;
-                  font-size:0.9rem;
-                  text-align:left;
-                }
-
-                td:last-child {
-                  border-top-right-radius: $table-radius;
-                  border-bottom-right-radius: $table-radius;
-                }
-              }
-
-              tr:hover {
-                background-color:#333;
-              }
-            }
-
-            td {
-              text-align:center;
-              font-size:0.8rem;
-              padding-right:0.75rem;
-              padding-left:0.75rem;
-              padding-top:0.25rem;
-              padding-bottom:0.25rem;
             }
           }
         }

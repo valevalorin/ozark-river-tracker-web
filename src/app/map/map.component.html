@@ -1,47 +1,4 @@
 <div class="content">
-  <div class="sidebar">
-    <div class="sidebar-flex">
-        <div class="sidebar-header mat-elevation-z3">
-          Gauges
-        </div>
-        <div class="sidebar-body">
-          <table cellspacing="0">
-            <thead>
-              <tr>
-                <th>
-                  Location
-                </th>
-                <th>
-                  Water Level
-                </th>
-                <th>
-                  Discharge Rate
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="activeRiver && activeRiver.gauges && activeRiver.gauges.length > 0">
-              <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
-                <td>
-                  {{gauge.name}}
-                </td>
-                <td>
-                  <span class="emphasis">{{gauge.mostRecent.waterLevel.value}}</span>
-                  &nbsp;ft
-                </td>
-                <td>
-                  <span *ngIf="gauge.mostRecent.dischargeRate">
-                    <span class="emphasis">
-                      {{gauge.mostRecent.dischargeRate.value}}
-                    </span>&nbsp;ft<sup>3</sup>/s
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-        </div>
-    </div>
-  </div>
   <div class="map mat-elevation-z12">
     <div class="overlay" [formGroup]="form">
       <div class="overlay-flex">
@@ -50,7 +7,6 @@
               <div class="search-bar mat-elevation-z2">
                 <div class="inner-search-bar" (click)="openAutocomplete()">
                   <mat-icon class="search-icon" aria-hidden="false" aria-label="Example home icon">search</mat-icon>
-                  <!-- <input type="text" placeholder="Starting typing to find your river"/> -->
                   <mat-form-field class="search-bar-field">
                     <input type="text" matInput formControlName="searchInput" [matAutocomplete]="riversearch">
                   </mat-form-field>
@@ -71,10 +27,9 @@
                 <div class="chip-body">
                   <div class="chip-metric">
                     <div class="value-row">
-                      <!-- <mat-icon matIcon>height</mat-icon> -->
                       <i class="material-icons">height</i>
                       <div class="metric-value">
-                        {{gauge.mostRecent.waterLevel.value}}&nbsp;
+                        {{gauge.mostRecent.waterLevel.value | depth}}&nbsp;
                       </div>
                       <div class="metric-unit">
                         ft
@@ -98,13 +53,9 @@
                     </div>
 
                     <div class="value-row centered" *ngIf="!gauge.mostRecent.dischargeRate">
-                      <!-- <i class="material-icons opacity">opacity</i> -->
                       <div class="metric-value">
                         N/A&nbsp;
                       </div>
-                      <!-- <div class="metric-unit">
-                        ft<sup>3</sup>/s
-                      </div> -->
                     </div>
 
                     <div class="metric-label">
@@ -128,5 +79,4 @@
 
     </div>
   </div>
-  <!-- <gauge-wrapper></gauge-wrapper> -->
 </div>

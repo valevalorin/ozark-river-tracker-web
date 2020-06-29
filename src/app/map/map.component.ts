@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Injector } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Injector, OnDestroy } from '@angular/core';
 import { NgElement, WithProperties, createCustomElement } from '@angular/elements';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { latLng, LatLng, tileLayer, marker, icon } from 'leaflet';
@@ -14,7 +14,7 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczB
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
 
   constructor(
     private injector: Injector,
@@ -40,6 +40,8 @@ export class MapComponent implements OnInit {
   public activeGauges = {};
 
   public form: FormGroup;
+
+  private refreshInterval: any;
   
   ngOnInit() {
     // initialize form
@@ -77,6 +79,10 @@ export class MapComponent implements OnInit {
     });
 
     this.initializeMap();
+
+    this.refreshInterval = setInterval(() => {
+      this.refreshMetrics();
+    }, 1000 * 60);
   }
 
   public autocompleteRiverSelected(river: River) {
@@ -159,11 +165,21 @@ export class MapComponent implements OnInit {
     }, 10);
   }
 
+  private refreshMetrics() {
+    this.riverService.getGauges(this.activeRiver.id).then((gauges) => {
+      this.activeRiver.gauges = gauges;
+    });
+  }
+
   private wait(millis): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
       }, millis);
     });
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.refreshInterval);
   }
 }
