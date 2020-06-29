@@ -37,6 +37,7 @@ export class MapComponent implements OnInit {
   public filteredRivers: River[];
   public autocompleteOpen: boolean = false;
   public activeRiver: River = null;
+  public activeGauges = {};
 
   public form: FormGroup;
   
@@ -128,7 +129,7 @@ export class MapComponent implements OnInit {
     this.leafletZoom = this.activeRiver.zoom;
 
     this.leafletLayers = [];
-
+    this.activeGauges = {};
     this.activeRiver.gauges.forEach((gauge) => {
       let m = marker([ gauge.lat, gauge.long ], {icon: this.leafletMarker});
       this.leafletLayers.push(m);
@@ -144,6 +145,25 @@ export class MapComponent implements OnInit {
       }, {});
     });
 
+    setTimeout(async () => {
+      for(let i = 0; i < this.activeRiver.gauges.length; i++) {
+        let gauge = this.activeRiver.gauges[i];
+        this.activeGauges[gauge.id] = true;
+        try {
+          await this.wait(100);
+        } catch (ex) {
+          // ignore
+          console.log(ex);
+        }
+      };
+    }, 10);
   }
 
+  private wait(millis): Promise<any> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, millis);
+    });
+  }
 }

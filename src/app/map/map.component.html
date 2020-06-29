@@ -63,8 +63,8 @@
             </div>
           </div>
           <div class="body">
-            <div class="gauge-list">
-              <div class="gauge-chip mat-elevation-z3" *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
+            <div class="gauge-list" *ngIf="activeRiver">
+              <div class="gauge-chip mat-elevation-z3" *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)" [ngClass]="{'active': activeGauges[gauge.id]}">
                 <div class="chip-header">
                   {{gauge.name}}
                 </div>
