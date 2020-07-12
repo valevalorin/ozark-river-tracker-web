@@ -1,0 +1,10 @@
+version: '3.1'
+
+services:
+
+  web-server:
+    container_name: web-server
+    image: teamship-studios/ort-web:latest
+    restart: always
+    ports:
+     - 8020:80
