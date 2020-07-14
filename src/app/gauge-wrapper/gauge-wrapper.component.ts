@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { RiverService } from '../services/river.service';
 import * as moment from 'moment';
+import { Gauge } from '../classes/gauge.class';
 
 @Component({
   selector: 'app-gauge-wrapper',
@@ -9,60 +10,61 @@ import * as moment from 'moment';
 })
 export class GaugeWrapperComponent implements OnInit {
 
-  public name: string = 'World';
-  public gauge: any = {};
+  @Input() public gauge: Gauge = null;
 
   public selectedMetric: string;
 
-  public chartData = {
-    datasets: [{
-        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(44, 44, 44, 0.4)"
-        ],
-        borderColor: [
-          "rgba(44, 44, 44, 1.0)"
-        ]
-    }]
-  };
-
   public datasets = null;
-  public chartLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   public  chartOptions = {
     'waterLevel': {
+      legend: {
+        display: false
+      },
+      title: {
+        display: true,
+        text: "Depth (ft)"
+      },
       tooltips: {
         callbacks: {
           label: (item) => `${item.yLabel} ft`,
         }
       },
       scales: {
+        xAxes: [{
+          type: 'time'
+        }],
         yAxes: [{
-          // scaleLabel: {
-          //   display: true,
-          //   labelString: '(in ft)'
-          // }
           ticks: {
             userCallback: function(item) {
-              return `${item} ft`;
+              let converted = item.toFixed(2);
+              return `${converted}`;
             },
           }
         }]
       }
     },
     'dischargeRate': {
+      legend: {
+        display: false
+      },
+      title: {
+        display: true,
+        text: 'Rate (ft³/s)'
+      },
       tooltips: {
         callbacks: {
-          label: (item) => `${item.yLabel} gl/m`,
+          label: (item) => `${item.yLabel} ft³/s`,
         }
       },
       scales: {
+        xAxes: [{
+          type: 'time'
+        }],
         yAxes: [{
           ticks: {
             userCallback: function(item) {
-              return `${item} gl/m`;
+              return `${item}`;
             },
           }
         }]
@@ -74,43 +76,53 @@ export class GaugeWrapperComponent implements OnInit {
 
   ngOnInit() {
     this.selectedMetric = 'waterLevel';
-    this.riverService.getGaugeHistory(this.gauge.id).then((metrics) => {
 
-      let datasets = {};
-      datasets['waterLevel'] = [{
-        label: 'Water Level',
-        data: metrics.waterLevel,
-        backgroundColor: [
-          "rgba(44, 44, 44, 0.4)"
-        ],
-        borderColor: [
-          "rgba(44, 44, 44, 1.0)"
-        ],
-        pointBackgroundColor: 'rgba(26, 133, 255, 1)',
-        pointBorderColor: 'rgba(26, 133, 255, 1)',
-        pointHoverBackgroundColor: 'rgba(140, 193, 253, 1)',
-        pointHoverBorderColor: 'rgba(26, 133, 255, 1)'
-      }];
-
-      datasets['dischargeRate'] = [{
-        label: 'Discharge Rate',
-        data: metrics.dischargeRate,
-        backgroundColor: [
-          "rgba(44, 44, 44, 0.4)"
-        ],
-        borderColor: [
-          "rgba(44, 44, 44, 1.0)"
-        ],
-        pointBackgroundColor: 'rgba(44,44,230,1)',
-        pointBorderColor: 'rgba(150,150,230,1)'
-      }];
-
-      this.datasets = datasets;
-
-
-      // Generate labels
-      // let today = moment.now();
+    let datasets = {};
+    let waterLevels = this.gauge.waterLevels.map((metric) => {
+      return {
+        x: metric.date,
+        y: metric.value
+      };
     });
+
+    let dischargeRates = this.gauge.dischargeRates.map((metric) => {
+      return {
+        x: metric.date,
+        y: metric.value
+      };
+    });
+
+    datasets['waterLevel'] = [{
+      label: 'Water Level',
+      data: waterLevels,
+      backgroundColor: [
+        "rgba(44, 44, 44, 0.4)"
+      ],
+      borderColor: [
+        "rgba(44, 44, 44, 1.0)"
+      ],
+      pointBackgroundColor: 'rgba(26, 133, 255, 1)',
+      pointBorderColor: 'rgba(26, 133, 255, 1)',
+      pointHoverBackgroundColor: 'rgba(140, 193, 253, 1)',
+      pointHoverBorderColor: 'rgba(26, 133, 255, 1)'
+    }];
+
+    datasets['dischargeRate'] = [{
+      label: 'Discharge Rate',
+      data: dischargeRates,
+      backgroundColor: [
+        "rgba(44, 44, 44, 0.4)"
+      ],
+      borderColor: [
+        "rgba(44, 44, 44, 1.0)"
+      ],
+      pointBackgroundColor: 'rgba(26, 133, 255, 1)',
+      pointBorderColor: 'rgba(26, 133, 255, 1)',
+      pointHoverBackgroundColor: 'rgba(140, 193, 253, 1)',
+      pointHoverBorderColor: 'rgba(26, 133, 255, 1)'
+    }];
+
+    this.datasets = datasets;
   }
 
   selectMetric(metric): void {

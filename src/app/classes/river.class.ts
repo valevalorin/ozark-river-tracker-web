@@ -1,14 +1,16 @@
+import { Gauge } from './gauge.class';
+
 export class River {
 
-  public id: number;
+  public id: string;
   public name: string;
-  public gauges: any[];
+  public gauges: Gauge[];
   public centerLat: number;
   public centerLong: number;
   public zoom: number;
 
   constructor(
-    id: number,
+    id: string,
     name: string,
     centerLat = 36.956008,
     centerLong = -90.994107,

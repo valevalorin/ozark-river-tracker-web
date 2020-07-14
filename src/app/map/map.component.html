@@ -1,68 +1,82 @@
 <div class="content">
-  <div class="overlay" [formGroup]="form">
-    <div class="overlay-flex">
-        <div class="header">
-          <div class="search-row">
-            <div class="search-bar mat-elevation-z2">
-              <div class="inner-search-bar" (click)="openAutocomplete()">
-                <mat-icon class="search-icon" aria-hidden="false" aria-label="Example home icon">search</mat-icon>
-                <!-- <input type="text" placeholder="Starting typing to find your river"/> -->
-                <mat-form-field class="search-bar-field">
-                  <input type="text" matInput formControlName="searchInput" [matAutocomplete]="riversearch">
-                </mat-form-field>
+  <div class="map mat-elevation-z12">
+    <div class="overlay" [formGroup]="form">
+      <div class="overlay-flex">
+          <div class="header">
+            <div class="search-row">
+              <div class="search-bar mat-elevation-z2">
+                <div class="inner-search-bar" (click)="openAutocomplete()">
+                  <mat-icon class="search-icon" aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+                  <mat-form-field class="search-bar-field">
+                    <input type="text" matInput formControlName="searchInput" [matAutocomplete]="riversearch">
+                  </mat-form-field>
 
-                <mat-autocomplete #riversearch="matAutocomplete" (optionSelected)="autocompleteRiverSelected($event.option.value)" [isOpen]="autocompleteOpen">
-                  <mat-option *ngFor="let river of filteredRivers" [value]="river">{{river.name}}</mat-option>
-                </mat-autocomplete>
+                  <mat-autocomplete #riversearch="matAutocomplete" (optionSelected)="autocompleteRiverSelected($event.option.value)" [isOpen]="autocompleteOpen">
+                    <mat-option *ngFor="let river of filteredRivers" [value]="river">{{river.name}}</mat-option>
+                  </mat-autocomplete>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="body">
-          <div class="table-container mat-elevation-z3">
-            <table cellspacing="0">
-              <thead>
-                <tr>
-                  <th>
-                    Gauge
-                  </th>
-                  <th>
-                    Water Level
-                  </th>
-                  <th>
-                    Discharge Rate
-                  </th>
-                </tr>
-              </thead>
-              <tbody *ngIf="activeRiver">
-                <tr *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)">
-                  <td>
-                    {{gauge.name}}
-                  </td>
-                  <td>
-                    <span>{{gauge.metrics.waterLevel}}</span>
-                    &nbsp;ft
-                  </td>
-                  <td>
-                    <span>{{gauge.metrics.dischargeRate}}</span>&nbsp;gl/m
-                  </td>
-                </tr>
-              </tbody>
+          <div class="body">
+            <div class="gauge-list" *ngIf="activeRiver">
+              <div class="gauge-chip mat-elevation-z3" *ngFor="let gauge of activeRiver.gauges" (click)="centerOnGauge(gauge)" [ngClass]="{'active': activeGauges[gauge.id]}">
+                <div class="chip-header">
+                  {{gauge.name}}
+                </div>
+                <div class="chip-body">
+                  <div class="chip-metric">
+                    <div class="value-row">
+                      <i class="material-icons">height</i>
+                      <div class="metric-value">
+                        {{gauge.mostRecent.waterLevel.value | depth}}&nbsp;
+                      </div>
+                      <div class="metric-unit">
+                        ft
+                      </div>
+                    </div>
 
-            </table>
+                    <div class="metric-label">
+                      Water Level
+                    </div>
+                  </div>
+
+                  <div class="chip-metric">
+                    <div class="value-row" *ngIf="gauge.mostRecent.dischargeRate">
+                      <i class="material-icons opacity">opacity</i>
+                      <div class="metric-value">
+                        {{gauge.mostRecent.dischargeRate.value}}&nbsp;
+                      </div>
+                      <div class="metric-unit">
+                        ft<sup>3</sup>/s
+                      </div>
+                    </div>
+
+                    <div class="value-row centered" *ngIf="!gauge.mostRecent.dischargeRate">
+                      <div class="metric-value">
+                        N/A&nbsp;
+                      </div>
+                    </div>
+
+                    <div class="metric-label">
+                      Discharge Rate
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
-        </div>
+      </div>
+    </div>
+    <div id="mapid"
+      leaflet
+      [leafletOptions]="leafletOptions"
+      [leafletLayers]="leafletLayers"
+      [(leafletZoom)]="leafletZoom"
+      [(leafletCenter)]="leafletCenter"
+    >
+
     </div>
   </div>
-  <div id="mapid"
-    leaflet
-    [leafletOptions]="leafletOptions"
-    [leafletLayers]="leafletLayers"
-    [(leafletZoom)]="leafletZoom"
-    [(leafletCenter)]="leafletCenter"
-  >
-
-  </div>
-
-  <!-- <gauge-wrapper></gauge-wrapper> -->
 </div>

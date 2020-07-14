@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Injector } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Injector, OnDestroy } from '@angular/core';
 import { NgElement, WithProperties, createCustomElement } from '@angular/elements';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { latLng, LatLng, tileLayer, marker, icon } from 'leaflet';
@@ -14,7 +14,7 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoidmFsZXZhbG9yaW4iLCJhIjoiY2thbGdidnNlMTFkNDJyczB
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
 
   constructor(
     private injector: Injector,
@@ -28,7 +28,7 @@ export class MapComponent implements OnInit {
   public leafletZoom: number = 13;
   public leafletCenter = latLng( 36.956008, -90.994107);
   private leafletMarker = icon({
-    iconUrl: 'assets/img/gauge_light.png',
+    iconUrl: 'assets/img/gauge_light_margin.png',
     iconSize: [41, 59],
     iconAnchor: [20, 59]
   })
@@ -36,9 +36,12 @@ export class MapComponent implements OnInit {
   public rivers: River[] = [];
   public filteredRivers: River[];
   public autocompleteOpen: boolean = false;
-  private activeRiver: River = null;
+  public activeRiver: River = null;
+  public activeGauges = {};
 
   public form: FormGroup;
+
+  private refreshInterval: any;
   
   ngOnInit() {
     // initialize form
@@ -46,20 +49,6 @@ export class MapComponent implements OnInit {
       searchInput: ['', null],
       selectedRiver: [null, null]
     });
-
-    // setTimeout(() => {
-    //   this.chartData.datasets[0] = {
-    //     label: 'Hello',
-    //     data: [1, 2, 3, 4, 5, 6],
-    //     backgroundColor: [
-    //       "rgba(44, 44, 230, 0.4)"
-    //     ],
-    //     borderColor: [
-    //       "rgba(44, 44, 230, 1.0)"
-    //     ]
-    //   };
-      
-    // }, 3000);
 
     this.form.get('searchInput').valueChanges.subscribe((name: any) => {
       if(Util.nnue(name)) {
@@ -80,8 +69,6 @@ export class MapComponent implements OnInit {
       }
     });
 
-    // this.initializeMap();
-
     this.riverService.getRivers().then((rivers) => {
       this.rivers = rivers;
 
@@ -93,58 +80,9 @@ export class MapComponent implements OnInit {
 
     this.initializeMap();
 
-    // this.leafletLayers = [
-    //   tileLayer(
-    //     // 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
-    //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //     {
-    //       tileSize: 512,
-    //       maxZoom: 18,
-    //       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //       // accessToken: MAPBOX_TOKEN,
-    //       zoomOffset: -1
-    //     }
-    //   )
-    // ];
-
-    // this.leafletOptions = {
-    //   layers: this.leafletLayers,
-    //   zoom: 13,
-    //   center: latLng( 36.956008, -90.994107)
-    // };
-
-    
-
-    // this.leafletLayers.push(
-    //   marker([ 36.956008, -90.994107 ])
-    // );
-
-    // let m = marker([ 36.956008, -90.994107 ]);
-    // this.leafletLayers.push(m);
-
-    // // m.bindPopup( layer => {
-    // //   // let scope = this;
-    // //   let injector = this.injector;
-    // //   const popupEl = createCustomElement(GaugeWrapperComponent, {injector});
-    // //   // const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('app-gauge-wrapper') as any;
-    // //   // popupEl.name = 'Hello';
-    // //   return popupEl;
-    // // }, {});
-
-    // m.bindPopup( layer => {
-    //   const popupEl: NgElement & WithProperties<GaugeWrapperComponent> = document.createElement('gauge-wrapper') as any;
-    //   // Listen to the close event
-    //   popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
-    //   popupEl.name = 'Hello';
-    //   // Add to the DOM
-    //   document.body.appendChild(popupEl);
-    //   return popupEl;
-    //   // layer.bindPopup( fl => {
-        
-    //   // });
-    // }, {});
-
-    
+    this.refreshInterval = setInterval(() => {
+      this.refreshMetrics();
+    }, 1000 * 60);
   }
 
   public autocompleteRiverSelected(river: River) {
@@ -185,8 +123,11 @@ export class MapComponent implements OnInit {
   }
 
   private activeRiverChanged(river: River): void {
-    this.activeRiver = river;
-    this.renderActiveRiver();
+    this.riverService.getGauges(river.id).then((gauges) => {
+      this.activeRiver = river;
+      river.gauges = gauges;
+      this.renderActiveRiver();
+    });
   }
 
   private renderActiveRiver(): void {
@@ -194,7 +135,7 @@ export class MapComponent implements OnInit {
     this.leafletZoom = this.activeRiver.zoom;
 
     this.leafletLayers = [];
-
+    this.activeGauges = {};
     this.activeRiver.gauges.forEach((gauge) => {
       let m = marker([ gauge.lat, gauge.long ], {icon: this.leafletMarker});
       this.leafletLayers.push(m);
@@ -210,6 +151,35 @@ export class MapComponent implements OnInit {
       }, {});
     });
 
+    setTimeout(async () => {
+      for(let i = 0; i < this.activeRiver.gauges.length; i++) {
+        let gauge = this.activeRiver.gauges[i];
+        this.activeGauges[gauge.id] = true;
+        try {
+          await this.wait(100);
+        } catch (ex) {
+          // ignore
+          console.log(ex);
+        }
+      };
+    }, 10);
   }
 
+  private refreshMetrics() {
+    this.riverService.getGauges(this.activeRiver.id).then((gauges) => {
+      this.activeRiver.gauges = gauges;
+    });
+  }
+
+  private wait(millis): Promise<any> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, millis);
+    });
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.refreshInterval);
+  }
 }

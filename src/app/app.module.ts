@@ -20,17 +20,21 @@ import { MapComponent } from './map/map.component';
 import { GaugeWrapperComponent } from './gauge-wrapper/gauge-wrapper.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RiverService } from './services/river.service';
+import { HttpClientModule } from '@angular/common/http';
+import { DepthPipe } from './pipes/depth.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    GaugeWrapperComponent
+    GaugeWrapperComponent,
+    DepthPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     ChartsModule,
     MatIconModule,
     LeafletModule,
